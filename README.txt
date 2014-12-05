@@ -14,6 +14,11 @@ Remaining points of confusion:
 Main.java:~320 Is the random cut distribution for computing standard deviation
 still accurate? Same at ~350 for wgThreshold
 
+The current version of HTSJDK (samtools/htsjdk commit 9c01b696ab) does not
+play nice with the current version of Snappy (1.1.1.4), so I basically
+disabled Snappy in HTSJDK by changing
+htsjdk/samtools/util/SnappyLoader.java:86 to just ask "if(true)"
+
 See txje/sequence-bias-adjustment for more information on read weights
 -----------------------------------
 
