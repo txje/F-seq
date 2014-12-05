@@ -4,6 +4,9 @@ Welcome to F-Seq.
 This fork is intended to modify F-seq to accept real-valued read weights
 (instead of 1) and is a work in progress.
 
+In BED format, the score field will be parsed as a floating-point value for
+the read's weight. It need NOT be in the range 0-1000.
+
 See txje/sequence-bias-adjustment for more information on read weights
 -----------------------------------
 

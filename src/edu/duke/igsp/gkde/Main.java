@@ -64,7 +64,7 @@ public class Main {
 //    opts.addOption("b", true, "bandwidth (default=200)");
 //    opts.addOption("w", true, "window (default=3800");
     opts.addOption("wg", true, "wg threshold set (defualt = calculated)");
-    opts.addOption("c", true, "genomic count of sequence reads (defualt = calculated)");
+    opts.addOption("c", true, "genomic total read weight (defualt = calculated)");
     opts.addOption("h", false, "print usage");
     opts.addOption(OptionBuilder.withArgName( "input dir" )
         .hasArg()
@@ -115,7 +115,7 @@ public class Main {
     
     long bandwidth = 0l;
     long window = 0l;
-  	long ncuts = 0l;
+  	double ncuts = 0.0d;
 	float temp_threshold = 0f;
 
     System.out.println("F-Seq Version 1.85");
@@ -158,7 +158,7 @@ public class Main {
 		if(cmd.hasOption("wg"))
 			temp_threshold = Float.parseFloat(cmd.getOptionValue("wg"));
 		if(cmd.hasOption("c"))
-			ncuts = Long.parseLong(cmd.getOptionValue("c"));
+			ncuts = Double.parseDouble(cmd.getOptionValue("c"));
 
       // TESTING ONLY
    //   if(cmd.hasOption("w")) // window
@@ -194,9 +194,10 @@ public class Main {
     }
     fragment_offset = (int)(fragment_size/2);
     
-	if(ncuts == 0l) {
+	  if(ncuts == 0.0d) {
 	  	for(int i = 0; i < chrs.length; ++i){
- 	 		ncuts += (long)chrs[i].getLength();
+        // computes the total read weight of all cuts on a chromosome
+ 	 		  ncuts += chrs[i].getTotalWeight();
 	  	}
     }
 
@@ -295,7 +296,7 @@ public class Main {
 	  
 	  	for(int i = 0; i < chrs.length; ++i){
 	  		size += (int)Math.abs(chrs[i].getLastPos() - chrs[i].getFirstPos());
-	  		ncuts += chrs[i].getLength();
+	  		ncuts += chrs[i].getTotalWeight();
 	  	}
 
 	    int totalWindow = 1 + (int)(settings.window * 2);	  	
@@ -325,7 +326,7 @@ public class Main {
 	  	
 	  	for(int i = 0; i < chrs.length; ++i){
 	  		size += (int)Math.abs(chrs[i].getLastPos() - chrs[i].getFirstPos());
-	  		ncuts += chrs[i].getLength();
+	  		ncuts += chrs[i].getTotalWeight();
 	  	}
 	  	
 	    int totalWindow = 1 + (int)(settings.window * 2);	  	
@@ -425,7 +426,7 @@ public class Main {
 	  return median;
   }
   
-  private static float density(Settings settings, long chromPos, int cutIdx, long[] cuts){
+  private static float density(Settings settings, long chromPos, int cutIdx, double[] cuts){
 	    
 	    long minPos = chromPos - settings.window;
 	    long maxPos = chromPos + settings.window;

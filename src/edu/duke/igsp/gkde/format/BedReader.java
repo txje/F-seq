@@ -91,13 +91,13 @@ public class BedReader {
           if(Math.abs(diff) > 1){
             //long mid = (long)Math.floor(diff / 2.0);
             if(arr[5].equals("+")) {
-            	seq = new KDEChromosome.Sequence(s, arr[5].equals("+"));
+            	seq = new KDEChromosome.Sequence(s, arr[5].equals("+"), Float.parseFloat(arr[4]));
             } else {
-            	seq = new KDEChromosome.Sequence(e, arr[5].equals("+"));
+            	seq = new KDEChromosome.Sequence(e, arr[5].equals("+"), Float.parseFloat(arr[4]));
             }
             currentCuts.add(seq);
           }else{
-            seq = new KDEChromosome.Sequence(s, arr[5].equals("+"));
+            seq = new KDEChromosome.Sequence(s, arr[5].equals("+"), Float.parseFloat(arr[4]));
             currentCuts.add(seq);
           }
         } catch (NumberFormatException e) {
