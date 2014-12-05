@@ -48,9 +48,11 @@ import edu.duke.igsp.gkde.KDEChromosome;
 import edu.duke.igsp.gkde.format.BedDensityWriter;
 import edu.duke.igsp.gkde.format.NpfDensityWriter;
 import edu.duke.igsp.gkde.format.BedReader;
+import edu.duke.igsp.gkde.format.SamReader;
 import edu.duke.igsp.gkde.format.DensityWriter;
 import edu.duke.igsp.gkde.format.WiggleDensityWriter;
 import edu.duke.igsp.gkde.background.*;
+
 
 public class Main {
   
@@ -184,8 +186,15 @@ public class Main {
     File[] pfiles = getFiles(inputDirectory, files);
     File[] background_files = getFiles(backgroundDirectory, bgfiles);
     File[] ploidy_files = getFiles(ploidyDirectory, ipfiles);
-    
-    KDEChromosome[] chrs = BedReader.read(pfiles);
+
+    KDEChromosome[] chrs = null;
+    // assume all files are of the same type, if not we'll get parsing errors
+    String extension = FilenameUtils.getExtension(pfiles[0].getPath()).toLowerCase();
+    if(extension == ".bed") {
+      chrs = BedReader.read(pfiles);
+    } else if(extension == ".sam" || extension == ".bam") {
+      chrs = SamReader.read(pfiles);
+    }
     //KDEChromosome[] input = BedReader.read(ifiles);
     
     //compute fragment offset

@@ -7,6 +7,9 @@ This fork is intended to modify F-seq to accept real-valued read weights
 In BED format, the score field will be parsed as a floating-point value for
 the read's weight. It need NOT be in the range 0-1000.
 
+In SAM/BAM format, the floating-point score should be in an optional tag named
+"XW".
+
 See txje/sequence-bias-adjustment for more information on read weights
 -----------------------------------
 
@@ -18,6 +21,7 @@ http://java.sun.com/javase/downloads/index.jsp
 
 Current accepted input formats:
 Bed, http://genome.ucsc.edu/FAQ/FAQformat#format1
+Sam/Bam, http://samtools.github.io/hts-specs/SAMv1.pdf
 
 Currently accepted output formats:
 Wiggle, http://genome.ucsc.edu/FAQ/FAQformat#format6
