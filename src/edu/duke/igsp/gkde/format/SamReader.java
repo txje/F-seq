@@ -92,7 +92,12 @@ public class SamReader {
         	  sequenceLength = (int)diff;
         	  lengthSet = true;
           }
-          float weight = samRecord.getFloatAttribute("XW"); // read weight
+          float weight;
+          try {
+            weight = samRecord.getFloatAttribute("XW"); // read weight
+          } catch (Exception ex) {
+            weight = 1.0f;
+          }
           if(samRecord.getReadNegativeStrandFlag()) {
             seq = new KDEChromosome.Sequence(s, false, weight);
           } else {
