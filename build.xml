@@ -29,6 +29,9 @@
   <!-- classpath set to include jars -->
   <fileset id="lib.classpath" dir="${lib.dir}" >
     <include name="commons-cli-1.1.jar" />
+    <include name="commons-io-2.4.jar" />
+    <include name="commons-jexl-2.1.1.jar" />
+    <include name="snappy-java-1.1.1.6.jar" />
   </fileset>
 
   <target name="all" depends="jar, dist-all"

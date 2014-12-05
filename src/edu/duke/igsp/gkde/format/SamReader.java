@@ -42,7 +42,6 @@ import java.util.HashMap;
 import edu.duke.igsp.gkde.KDEChromosome;
 
 import htsjdk.samtools.SAMRecord;
-import htsjdk.samtools.SamReader;
 import htsjdk.samtools.SamReaderFactory;
 
 /**
@@ -71,7 +70,7 @@ public class SamReader {
     
     for (int i = 0; i < files.length; ++i) {
 
-      final SamReader reader = SamReaderFactory.makeDefault().open(inputSamOrBamFile);
+      final htsjdk.samtools.SamReader reader = SamReaderFactory.makeDefault().open(files[i]);
 
       for (final SAMRecord samRecord : reader) {
         String chrom = samRecord.getReferenceName();
@@ -87,7 +86,7 @@ public class SamReader {
         
         try {
           long s = samRecord.getAlignmentStart();
-          long e = samRecord.getAlignmentEnd()
+          long e = samRecord.getAlignmentEnd();
           long diff = e - s;
           if(!lengthSet) { // assume all reads are the same length
         	  sequenceLength = (int)diff;

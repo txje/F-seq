@@ -10,6 +10,10 @@ the read's weight. It need NOT be in the range 0-1000.
 In SAM/BAM format, the floating-point score should be in an optional tag named
 "XW".
 
+Remaining points of confusion:
+Main.java:~320 Is the random cut distribution for computing standard deviation
+still accurate? Same at ~350 for wgThreshold
+
 See txje/sequence-bias-adjustment for more information on read weights
 -----------------------------------
 

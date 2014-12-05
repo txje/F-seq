@@ -33,6 +33,7 @@ import java.io.FileFilter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
+import org.apache.commons.io.FilenameUtils;
 
 import javax.swing.JFrame;
 
@@ -312,7 +313,7 @@ public class Main {
 	    int cutDensity = (int)((ncuts / size) * totalWindow);
 	    int thresholdIterations = 10000;
 	  	double[] densities = new double[thresholdIterations];
-	    long[] cuts = new long[cutDensity];
+	    double[] cuts = new double[cutDensity];
 	  	
 	    for(int i = 0; i < thresholdIterations; ++i){
 	      for(int j = 0; j < cuts.length; ++j)
@@ -342,7 +343,7 @@ public class Main {
 	    int cutDensity = (int)((ncuts / size) * totalWindow);
 	    int thresholdIterations = 10000;
 	  	double[] densities = new double[thresholdIterations];
-	    long[] cuts = new long[cutDensity];
+	    double[] cuts = new double[cutDensity];
 	  	
 	    for(int i = 0; i < thresholdIterations; ++i){
 	      for(int j = 0; j < cuts.length; ++j)

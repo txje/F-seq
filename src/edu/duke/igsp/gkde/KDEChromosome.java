@@ -59,8 +59,8 @@ public class KDEChromosome {
     _sequenceLength = sequenceLength;
 
     _totalWeight = 0.0d;
-    for(long i = 0; i < _cuts.length; i++) {
-      _totalWeight = _totalWeight + _cuts[i].weight;
+    for(int i = 0; i < _cuts.length; i++) {
+      _totalWeight = _totalWeight + _cuts[i].getWeight();
     }
   }
   
@@ -777,7 +777,7 @@ public class KDEChromosome {
       public Sequence() {
     	  this.position = 0;
     	  this.strand = false;
-        this.weight = 1.0;
+        this.weight = 1.0f;
       }
       
       //CompareTo overload
