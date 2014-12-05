@@ -1,5 +1,12 @@
 Welcome to F-Seq.
 
+-----------------------------------
+This fork is intended to modify F-seq to accept real-valued read weights
+(instead of 1) and is a work in progress.
+
+See txje/sequence-bias-adjustment for more information on read weights
+-----------------------------------
+
 This software requires Java version 1.5 or greater.  
 To see your version of java (or if it is installed), type 'java -version'
 
