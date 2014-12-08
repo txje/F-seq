@@ -19,6 +19,12 @@ play nice with the current version of Snappy (1.1.1.4), so I basically
 disabled Snappy in HTSJDK by changing
 htsjdk/samtools/util/SnappyLoader.java:86 to just ask "if(true)"
 
+Another token of knowledge --
+pysam will write BAM files with optional tags with the type 'd' (double),
+however this is not allowed in the "official" spec, so HTSJDK will not read a
+BAM file with 'd' typed tags. It is trivial to add this functionality to
+HTSJDK. Do so.
+
 See txje/sequence-bias-adjustment for more information on read weights
 -----------------------------------
 

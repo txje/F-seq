@@ -33,7 +33,6 @@ import java.io.FileFilter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
-import org.apache.commons.io.FilenameUtils;
 
 import javax.swing.JFrame;
 
@@ -190,7 +189,8 @@ public class Main {
 
     KDEChromosome[] chrs = null;
     // assume all files are of the same type, if not we'll get parsing errors
-    String extension = FilenameUtils.getExtension(pfiles[0].getPath()).toLowerCase();
+    String path = pfiles[0].getPath();
+    String extension = path.substring(path.indexOf('.')).toLowerCase();
     if(extension == ".bed") {
       chrs = BedReader.read(pfiles);
     } else if(extension == ".sam" || extension == ".bam") {
