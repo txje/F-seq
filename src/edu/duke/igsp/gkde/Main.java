@@ -190,10 +190,13 @@ public class Main {
     KDEChromosome[] chrs = null;
     // assume all files are of the same type, if not we'll get parsing errors
     String path = pfiles[0].getPath();
-    String extension = path.substring(path.indexOf('.')).toLowerCase();
-    if(extension == ".bed") {
+    String extension = path.substring(path.lastIndexOf('.')).toLowerCase();
+    System.out.println("Path: " + path + ", extension: " + extension);
+    if(extension.equals(".bed")) {
+      System.out.println("Parsing BED file.");
       chrs = BedReader.read(pfiles);
-    } else if(extension == ".sam" || extension == ".bam") {
+    } else if(extension.equals(".sam") || extension.equals(".bam")) {
+      System.out.println("Parsing SAM/BAM file.");
       chrs = SamReader.read(pfiles);
     }
     //KDEChromosome[] input = BedReader.read(ifiles);

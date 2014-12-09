@@ -43,6 +43,7 @@ import edu.duke.igsp.gkde.KDEChromosome;
 
 import htsjdk.samtools.SAMRecord;
 import htsjdk.samtools.SamReaderFactory;
+import htsjdk.samtools.ValidationStringency;
 
 /**
  * Sam/Bam files are not necessarily sorted. Must load everything before sort.
@@ -70,7 +71,10 @@ public class SamReader {
     
     for (int i = 0; i < files.length; ++i) {
 
-      final htsjdk.samtools.SamReader reader = SamReaderFactory.makeDefault().open(files[i]);
+      //final htsjdk.samtools.SamReader reader = SamReaderFactory.makeDefault().open(files[i]);
+      final htsjdk.samtools.SamReaderFactory factory = SamReaderFactory.make();
+      factory.validationStringency(ValidationStringency.SILENT); // STRICT, LENIENT, SILENT
+      final htsjdk.samtools.SamReader reader = factory.open(files[i]);
 
       for (final SAMRecord samRecord : reader) {
         String chrom = samRecord.getReferenceName();
