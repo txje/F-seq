@@ -413,51 +413,40 @@ public class KDEChromosome {
     
     double sum = 0.0;
     for(int i = cutIdx-1; i > -1; --i){
-      if (cuts[i].getPosition() < minPos) 
-        break;
+      if (cuts[i].getPosition() < minPos) break;
       int d = Math.abs((int)(cuts[i].getPosition() - chromPos));
-      if(!settings.dnaseExperimentType) {
+      if(settings.experimentType.equals("chip")) {
     	  if(cuts[i].getStrand() && cuts[i].getPosition() <= chromPos) {
     		  d = Math.abs((int)(cuts[i].getPosition() + settings.offset - chromPos));
-    		  sum += settings.precompute[d] * cuts[i].getWeight();
+    	  } else if(!cuts[i].getStrand() && cuts[i].getPosition() >= chromPos) {
+          d = Math.abs((int)(cuts[i].getPosition() - settings.offset - chromPos));
     	  } else {
-    		  if(!cuts[i].getStrand() && cuts[i].getPosition() >= chromPos) {
-    			  d = Math.abs((int)(cuts[i].getPosition() - settings.offset - chromPos));
-    			  sum += settings.precompute[d] * cuts[i].getWeight();    		  
-    		  }
-    	  }
-      } else {
-    	  sum += settings.precompute[d] * cuts[i].getWeight();
+          continue;
+        }
       }
+    	sum += settings.precompute[d] * cuts[i].getWeight();
     }
     
     for(int i = cutIdx; i < cuts.length; ++i){
       if (cuts[i].getPosition() > maxPos) break;
-      
       int d = Math.abs((int)(cuts[i].getPosition() - chromPos));
-      
-      //System.out.println(d);
       if(d > PRECOMPUTE.length-1)
         throw new IllegalStateException();
-      
-      if(!settings.dnaseExperimentType) {
+      if(settings.experimentType.equals("chip")) {
     	  if(cuts[i].getStrand() && cuts[i].getPosition() <= chromPos) {
     		  d = Math.abs((int)(cuts[i].getPosition() + settings.offset - chromPos));
-    		  sum += settings.precompute[d] * cuts[i].getWeight();
-    	  } else {
-    		  if(!cuts[i].getStrand() && cuts[i].getPosition() >= chromPos) {
-    			  d = Math.abs((int)(cuts[i].getPosition() - settings.offset - chromPos));
-    			  sum += settings.precompute[d] * cuts[i].getWeight();    		  
-    		  }
-    	  }
-      } else {
-    	  sum += settings.precompute[d] * cuts[i].getWeight();
+    	  } else if(!cuts[i].getStrand() && cuts[i].getPosition() >= chromPos) {
+          d = Math.abs((int)(cuts[i].getPosition() - settings.offset - chromPos));
+        } else {
+          continue;
+        }
       }
+    	sum += settings.precompute[d] * cuts[i].getWeight();
     }
     
     return (float)(sum / (double)settings.bandwidth);
   }
-  
+
   private float bgdensity(Settings settings, long chromPos, int cutIdx, Sequence[] cuts, WigChromosome bgdata){
     
     long minPos = chromPos - settings.window;
@@ -468,41 +457,32 @@ public class KDEChromosome {
     int bgOffset = (int)_firstCut - bgdata.getStart(); //convert to 0 based
     
     double sum = 0.0;
-    int b;
+    int b = 0;
     
     for(int i = cutIdx-1; i > -1; --i){
       if (cuts[i].getPosition() < minPos) 
         break;
       int d = Math.abs((int)(cuts[i].getPosition() - chromPos));
       
-      
-      if(!settings.dnaseExperimentType) {
+      if(settings.experimentType.equals("chip")) {
+    		d = Math.abs((int)(cuts[i].getPosition() + (int)settings.offset - chromPos));
     	  if(cuts[i].getStrand() && cuts[i].getPosition() <= chromPos) {
-    		  d = Math.abs((int)(cuts[i].getPosition() + (int)settings.offset - chromPos));
     		  b = (int)cuts[i].getPosition() - bgdata.getStart(); //index of bg for particular sequence i
-    		  if(b >= 0 && b < (int)bgdata.getLength() && bgdata.getValues()[b] > 0) {
-    			  sum += settings.precompute[d] * (double)bgdata.getValues()[b] * cuts[i].getWeight();
-    		  }
+    	  } else if(!cuts[i].getStrand() && cuts[i].getPosition() >= chromPos) {
+          b = (int)cuts[i].getPosition() - bgdata.getStart() - _sequenceLength;
     	  } else {
-    		  if(!cuts[i].getStrand() && cuts[i].getPosition() >= chromPos) {
-    			  d = Math.abs((int)(cuts[i].getPosition() - (int)settings.offset - chromPos));
-    			  b = (int)cuts[i].getPosition() - bgdata.getStart() - _sequenceLength;
-        		  if(b >= 0 && b < (int)bgdata.getLength() && bgdata.getValues()[b] > 0) {
-        			  sum += settings.precompute[d] * (double)bgdata.getValues()[b] * cuts[i].getWeight();
-        		  }  		  
-    		  }
-    	  }
+          continue;
+        }
       } else {
     	  if(cuts[i].getStrand()) {
     		  b = (int)cuts[i].getPosition() - bgdata.getStart(); //index of bg for particular sequence i
     	  } else {
     		  b = (int)cuts[i].getPosition() - bgdata.getStart() - _sequenceLength; //index of bg for particular sequence i
     	  }
+      }
 		  if(b >= 0 && b < (int)bgdata.getLength() && bgdata.getValues()[b] > 0) {
 			  sum += settings.precompute[d] * (double)bgdata.getValues()[b] * cuts[i].getWeight();
 		  }
-    	  //sum += settings.precompute[d] * cuts[i].getWeight();
-      }
     }
     
     for(int i = cutIdx; i < cuts.length; ++i){
@@ -510,36 +490,28 @@ public class KDEChromosome {
       
       int d = Math.abs((int)(cuts[i].getPosition() - chromPos));
       
-      //System.out.println(d);
       if(d > PRECOMPUTE.length-1)
         throw new IllegalStateException();
       
-      if(!settings.dnaseExperimentType) {
+      if(settings.experimentType.equals("chip")) {
+    		d = Math.abs((int)(cuts[i].getPosition() + (int)settings.offset - chromPos));
     	  if(cuts[i].getStrand() && cuts[i].getPosition() <= chromPos) {
-    		  d = Math.abs((int)(cuts[i].getPosition() + (int)settings.offset - chromPos));
     		  b = (int)cuts[i].getPosition() -bgdata.getStart();
-    		  if(b >= 0 && b < (int)bgdata.getLength() && bgdata.getValues()[b] > 0) {
-    			  sum += settings.precompute[d] * (double)bgdata.getValues()[b] * cuts[i].getWeight();
-    		  }
-    	  } else {
-    		  if(!cuts[i].getStrand() && cuts[i].getPosition() >= chromPos) {
-    			  d = Math.abs((int)(cuts[i].getPosition() - (int)settings.offset - chromPos));
-    			  b = (int)cuts[i].getPosition() - bgdata.getStart() - _sequenceLength;
-    			  if(b >= 0 && b < (int)bgdata.getLength() && bgdata.getValues()[b] > 0) {
-        			  sum += settings.precompute[d] * (double)bgdata.getValues()[b] * cuts[i].getWeight();
-        		  }		  
-    		  }
-    	  }
+    	  } else if(!cuts[i].getStrand() && cuts[i].getPosition() >= chromPos) {
+          b = (int)cuts[i].getPosition() - bgdata.getStart() - _sequenceLength;
+        } else {
+          continue;
+        }
       } else {
     	  if(cuts[i].getStrand()) {
     		  b = (int)cuts[i].getPosition() - bgdata.getStart(); //index of bg for particular sequence i
     	  } else {
     		  b = (int)cuts[i].getPosition() - bgdata.getStart() - _sequenceLength; //index of bg for particular sequence i
     	  }
+      }
 		  if(b >= 0 && b < (int)bgdata.getLength() && bgdata.getValues()[b] > 0) {
 			  sum += settings.precompute[d] * (double)bgdata.getValues()[b] * cuts[i].getWeight();
 		  }
-      }
     }
     
     return (float)(sum / (double)settings.bandwidth);
@@ -555,7 +527,7 @@ public class KDEChromosome {
 	    int bgOffset = (int)_firstCut - bgdata.getStart(); //convert to 0 based
 	    
 	    double sum = 0.0;
-	    int b;
+	    int b = 0;
 	    
 	    for(int i = cutIdx-1; i > -1; --i){
 	      if (cuts[i].getPosition() < minPos) 
@@ -563,7 +535,7 @@ public class KDEChromosome {
 	      int d = Math.abs((int)(cuts[i].getPosition() - chromPos));
 	      
 	      
-	      if(!settings.dnaseExperimentType) {
+	      if(settings.experimentType.equals("chip")) {
 	    	  if(cuts[i].getStrand() && cuts[i].getPosition() <= chromPos) {
 	    		  d = Math.abs((int)(cuts[i].getPosition() + (int)settings.offset - chromPos));
 	    		  b = (int)cuts[i].getPosition() - bgdata.getStart(); //index of bg for particular sequence i
@@ -600,7 +572,7 @@ public class KDEChromosome {
 	      if(d > PRECOMPUTE.length-1)
 	        throw new IllegalStateException();
 	      
-	      if(!settings.dnaseExperimentType) {
+	      if(settings.experimentType.equals("chip")) {
 	    	  if(cuts[i].getStrand() && cuts[i].getPosition() <= chromPos) {
 	    		  d = Math.abs((int)(cuts[i].getPosition() + (int)settings.offset - chromPos));
 	    		  b = (int)cuts[i].getPosition() -bgdata.getStart();
@@ -650,7 +622,7 @@ public class KDEChromosome {
 	      int d = Math.abs((int)(cuts[i].getPosition() - chromPos));
 	      
 	      
-	      if(!settings.dnaseExperimentType) {
+	      if(settings.experimentType.equals("chip")) {
 	    	  if(cuts[i].getStrand() && cuts[i].getPosition() <= chromPos) {
 	    		  d = Math.abs((int)(cuts[i].getPosition() + (int)settings.offset - chromPos));
 	    		  b = (int)cuts[i].getPosition() - bgdata.getStart(); //index of bg for particular sequence i
@@ -698,7 +670,7 @@ public class KDEChromosome {
 	      if(d > PRECOMPUTE.length-1)
 	        throw new IllegalStateException();
 	      
-	      if(!settings.dnaseExperimentType) {
+	      if(settings.experimentType.equals("chip")) {
 	    	  if(cuts[i].getStrand() && cuts[i].getPosition() <= chromPos) {
 	    		  d = Math.abs((int)(cuts[i].getPosition() + (int)settings.offset - chromPos));
 	    		  b = (int)cuts[i].getPosition() -bgdata.getStart();
@@ -802,10 +774,10 @@ public class KDEChromosome {
     public final int step;
     public final float threshold;
     public final int offset;
-    public final boolean dnaseExperimentType;
+    public final String experimentType;
     public final double ncuts;
     
-    public Settings(long bandwidth, long window, float threshold, int offset, double ncuts){
+    public Settings(long bandwidth, long window, float threshold, int offset, double ncuts, String inputDataType){
       this.bandwidth = bandwidth;
       this.window = window;
       this.threshold = threshold;
@@ -813,11 +785,11 @@ public class KDEChromosome {
       this.step = 0;
       this.ncuts = ncuts;
       
-      dnaseExperimentType = isDNase(offset);
+      experimentType = inputDataType;//isDNase(offset);
       precompute = precompute(window, bandwidth, ncuts);
     }
     
-    public Settings(long featureLength, float threshold, int offset, double ncuts){
+    public Settings(long featureLength, float threshold, int offset, double ncuts, String inputDataType){
       this.bandwidth = computeBandwidth(featureLength);
       this.window = computeOptimalWindow(bandwidth);
       this.threshold = threshold;
@@ -825,7 +797,7 @@ public class KDEChromosome {
       this.step = 0;
       this.ncuts = ncuts;
       
-      dnaseExperimentType = isDNase(offset);
+      experimentType = inputDataType;//isDNase(offset);
       precompute = precompute(window, bandwidth, ncuts);
     }
     

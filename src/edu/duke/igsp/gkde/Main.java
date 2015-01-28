@@ -93,6 +93,11 @@ public class Main {
       .withDescription(  "output format (default wig)" )
       .isRequired(false)
       .create( "of" ));
+    opts.addOption(OptionBuilder.withArgName( "dnase | chip | faire | atac" )
+      .hasArg()
+      .withDescription(  "input data" )
+      .isRequired(true)
+      .create( "in" ));
     opts.addOption("t", true, "threshold (standard deviations) (default=4.0)");
 //    opts.addOption("r", true, "background ratio (default=2.0)");
     opts.addOption("v", false, "verbose output");
@@ -113,6 +118,7 @@ public class Main {
     String[] bgfiles = {};
     String[] ipfiles = {};
     String outputFormat = "wig";
+    String inputDataType = "dnase";
     File outputDirectory = new File(System.getProperty("user.dir"));
     
     long bandwidth = 0l;
@@ -142,6 +148,13 @@ public class Main {
         outputFormat = cmd.getOptionValue("of");
         if(!outputFormat.equals("wig") && !outputFormat.equals("bed") && !outputFormat.equals("npf")){
           System.out.println("Parameter error: output format must be 'wig' or 'bed'.");
+          showHelp = true;
+        }
+      }
+      if(cmd.hasOption("in")){ // input data type
+        inputDataType = cmd.getOptionValue("in");
+        if(!inputDataType.equals("dnase") && !inputDataType.equals("chip") && !inputDataType.equals("faire") && !inputDataType.equals("atac")){
+          System.out.println("Parameter error: input data type must be 'dnase', 'chip', 'faire', or 'atac'.");
           showHelp = true;
         }
       }
@@ -216,9 +229,9 @@ public class Main {
 
     KDEChromosome.Settings settings = null;
     if(bandwidth > 0 || window > 0){
-      settings = new KDEChromosome.Settings(bandwidth,window,threshold,fragment_offset, ncuts);
+      settings = new KDEChromosome.Settings(bandwidth,window,threshold,fragment_offset, ncuts, inputDataType);
     }else{
-      settings = new KDEChromosome.Settings(featureLength, threshold, fragment_offset, ncuts);
+      settings = new KDEChromosome.Settings(featureLength, threshold, fragment_offset, ncuts, inputDataType);
     }
 
 	float wg_threshold = wgThreshold(settings, chrs);    
