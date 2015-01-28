@@ -96,9 +96,9 @@ public class SamReader {
         	  sequenceLength = (int)diff;
         	  lengthSet = true;
           }
-          float weight;
+          double weight;
           try {
-            weight = samRecord.getFloatAttribute("XW"); // read weight
+            weight = samRecord.getDoubleAttribute("XW"); // read weight
           } catch (Exception ex) {
             weight = 1.0f;
           }

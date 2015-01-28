@@ -568,7 +568,6 @@ public class KDEChromosome {
 	      
 	      int d = Math.abs((int)(cuts[i].getPosition() - chromPos));
 	      
-	      //System.out.println(d);
 	      if(d > PRECOMPUTE.length-1)
 	        throw new IllegalStateException();
 	      
@@ -666,7 +665,6 @@ public class KDEChromosome {
 	      
 	      int d = Math.abs((int)(cuts[i].getPosition() - chromPos));
 	      
-	      //System.out.println(d);
 	      if(d > PRECOMPUTE.length-1)
 	        throw new IllegalStateException();
 	      
@@ -714,7 +712,7 @@ public class KDEChromosome {
   {
       long position;
       boolean strand;
-      float weight;
+      double weight;
       
       public long getPosition() {
     	  	return position;
@@ -724,7 +722,7 @@ public class KDEChromosome {
     	  	return strand;
       }
 
-      public float getWeight() {
+      public double getWeight() {
           return weight;
       }
       
@@ -736,11 +734,11 @@ public class KDEChromosome {
     	  this.strand = str;
       }
 
-      public void setWeight(float wt) {
+      public void setWeight(double wt) {
     	  this.weight = wt;
       }
       
-      public Sequence(long x, boolean y, float w) {
+      public Sequence(long x, boolean y, double w) {
           this.position = x;
           this.strand = y;
           this.weight = w;
