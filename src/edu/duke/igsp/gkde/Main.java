@@ -58,7 +58,6 @@ public class Main {
   
   public static void main(String[] argv) throws Exception {
    
-    
     Options opts = new Options();
     opts.addOption("s",true,"wiggle track step (default=1)");
     opts.addOption("l",true, "feature length (default=600)");
@@ -98,6 +97,11 @@ public class Main {
       .withDescription(  "input data" )
       .isRequired(true)
       .create( "in" ));
+    opts.addOption(OptionBuilder.withArgName( "weight clip" )
+      .hasArg()
+      .withDescription(  "weight clip value (default none)" )
+      .isRequired(false)
+      .create( "wc" ));
     opts.addOption("t", true, "threshold (standard deviations) (default=4.0)");
 //    opts.addOption("r", true, "background ratio (default=2.0)");
     opts.addOption("v", false, "verbose output");
@@ -124,7 +128,8 @@ public class Main {
     long bandwidth = 0l;
     long window = 0l;
   	double ncuts = 0.0d;
-	float temp_threshold = 0f;
+	  float temp_threshold = 0f;
+    int weight_clip = 0;
 
     System.out.println("F-Seq Version 1.85");
     
@@ -157,6 +162,9 @@ public class Main {
           System.out.println("Parameter error: input data type must be 'dnase', 'chip', 'faire', or 'atac'.");
           showHelp = true;
         }
+      }
+      if(cmd.hasOption("wc")){ // weight clip
+        weight_clip = Integer.parseInt(cmd.getOptionValue("wc"));
       }
       if(cmd.hasOption("t")){ // threshold (standard deviations)
         threshold = Float.parseFloat(cmd.getOptionValue("t"));
@@ -210,7 +218,7 @@ public class Main {
       chrs = BedReader.read(pfiles);
     } else if(extension.equals(".sam") || extension.equals(".bam")) {
       System.out.println("Parsing SAM/BAM file.");
-      chrs = SamReader.read(pfiles);
+      chrs = SamReader.read(pfiles, weight_clip);
     }
     //KDEChromosome[] input = BedReader.read(ifiles);
     

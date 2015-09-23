@@ -60,7 +60,7 @@ import htsjdk.samtools.ValidationStringency;
  */
 public class SamReader {
 
-  public static KDEChromosome[] read(File[] files) throws IOException {
+  public static KDEChromosome[] read(File[] files, int weight_clip) throws IOException {
 
     HashMap<String, ArrayList<KDEChromosome.Sequence>> chrMap = new HashMap<String, ArrayList<KDEChromosome.Sequence>>();
 
@@ -99,6 +99,13 @@ public class SamReader {
           double weight;
           try {
             weight = samRecord.getDoubleAttribute("XW"); // read weight
+            if(weight_clip != 0) {
+              if(weight > weight_clip) {
+                weight = weight_clip;
+              } else if(weight < 1.0f/weight_clip) {
+                weight = 1.0f/weight_clip;
+              }
+            }
           } catch (Exception ex) {
             weight = 1.0f;
           }
